@@ -8,23 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		DA4DBBC32C19C6630066F451 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DA4DBBC22C19C6630066F451 /* main.c */; };
+		DA4DBBCB2C19C6AE0066F451 /* prg.cl in Sources */ = {isa = PBXBuildFile; fileRef = DA4DBBCA2C19C6AE0066F451 /* prg.cl */; };
+		DA4DBBCC2C19C6D00066F451 /* prg.cl in CopyFiles */ = {isa = PBXBuildFile; fileRef = DA4DBBCA2C19C6AE0066F451 /* prg.cl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		DA4DBBBD2C19C6630066F451 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
 			files = (
+				DA4DBBCC2C19C6D00066F451 /* prg.cl in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		DA4DBBBF2C19C6630066F451 /* red1 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = red1; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA4DBBC22C19C6630066F451 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		DA4DBBC92C19C6830066F451 /* ocl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ocl.h; sourceTree = "<group>"; };
+		DA4DBBCA2C19C6AE0066F451 /* prg.cl */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.opencl; path = prg.cl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +62,9 @@
 		DA4DBBC12C19C6630066F451 /* red1 */ = {
 			isa = PBXGroup;
 			children = (
+				DA4DBBC92C19C6830066F451 /* ocl.h */,
 				DA4DBBC22C19C6630066F451 /* main.c */,
+				DA4DBBCA2C19C6AE0066F451 /* prg.cl */,
 			);
 			path = red1;
 			sourceTree = "<group>";
@@ -120,6 +127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA4DBBC32C19C6630066F451 /* main.c in Sources */,
+				DA4DBBCB2C19C6AE0066F451 /* prg.cl in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
