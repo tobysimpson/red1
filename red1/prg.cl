@@ -18,9 +18,9 @@ kernel void vec_ini(global float *uu)
 
 
 //sum in place
-kernel void vec_sum(const  int      n,  //actual size
-                    const  int      s,  //stride
-                    global float   *uu)
+kernel void vec_sum(const  int    n,  //actual size
+                    const  int    s,  //stride
+                    global float            *uu)
 {
     //width
 //    const int w = 4;
@@ -35,19 +35,8 @@ kernel void vec_sum(const  int      n,  //actual size
 
 //    printf("%d/%d %d/%d %d/%d\n", glb_pos, glb_dim, loc_pos, loc_dim, grp_pos, grp_dim);
 
-    //buffer
-//    local float ww[w];
     
-    
-    int mem_pos = glb_pos*s; //strided
-    
-//    //zero padding
-//    ww[loc_pos] = (mem_pos<n)*uu[mem_pos];
-    
-    //sync
-    mem_fence(CLK_LOCAL_MEM_FENCE);
-    
-    printf("%d %3d %2d %2d %10.4f\n", s, glb_pos, loc_pos, grp_pos, uu[mem_pos]);
+    printf("%3d %3d %2d %2d %2d\n", n, s, glb_pos, loc_pos, grp_pos);
     
     
     return;

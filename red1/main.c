@@ -20,7 +20,7 @@
 
 
 
-//testing reduction
+//testing reduction - in place
 int main(int argc, const char * argv[])
 {
     printf("hello\n");
@@ -30,7 +30,7 @@ int main(int argc, const char * argv[])
     ocl_init(&ocl);
     
     //vars
-    size_t n = 17;
+    size_t n = 32;
     
     //width (check kernel!)
     size_t w = 4;
@@ -56,26 +56,33 @@ int main(int argc, const char * argv[])
      ===========
      */
     
-    int s = 4;
-    
     size_t n1 = n;
-    size_t n2 = ceil((float)n1/(float)w);     //num subtotals
-    size_t n3 = w*n2;                             //proc size (pad)
-    
-    
-    
-    printf("%zu %zu %zu %d\n", n1, n2, n2*w, s);
-    
-    //args
-    ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(int),    (void*)&n1);
-    ocl.err = clSetKernelArg(ocl.vec_sum, 1, sizeof(int),    (void*)&s);
-    ocl.err = clSetKernelArg(ocl.vec_sum, 2, sizeof(cl_mem), (void*)&uu);
-    
-    //calc - pad
-    ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_sum, 1, NULL, &n3, &w, 0, NULL, NULL);
+
+    for(uint i=0; i<5; i++)
+    {
+        size_t n2 = ceil((float)n1/(float)w);   //output
+        size_t n3 = w*n2;                       //pad
         
-       
+        size_t s = pow(w,i);
+        
+        printf("loop %d %3zu %3zu %3zu %3zu\n", i, n1, n2, n3, s);
+        
+        //args
+        ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(int),    (void*)&n1);
+        ocl.err = clSetKernelArg(ocl.vec_sum, 1, sizeof(int),    (void*)&s);
+        ocl.err = clSetKernelArg(ocl.vec_sum, 2, sizeof(cl_mem), (void*)&uu);
     
+        //calc - pad
+        ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_sum, 1, NULL, &n3, &w, 0, NULL, NULL);
+        
+        //iter
+        n1 = n2;
+        
+        if(n2==1) break;
+        
+    }
+    
+
     
     /*
      ===========
@@ -104,7 +111,7 @@ int main(int argc, const char * argv[])
 /*
  
  
- //testing reduction
+ //testing reduction - subtotals
  int main(int argc, const char * argv[])
  {
      printf("hello\n");
