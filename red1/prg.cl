@@ -6,7 +6,7 @@
 //
 
 //width
-constant int w = 4;
+constant int w = 256;
 
 
 //init
@@ -14,7 +14,7 @@ kernel void vec_ini(global float *uu)
 {
     int glb_pos = get_global_id(0);
     
-    uu[glb_pos] = glb_pos;
+    uu[glb_pos] = 1e0f; //glb_pos;
 
     return;
 }
@@ -27,7 +27,7 @@ kernel void vec_sum(const  int      n,      //size uu
 {
     int glb_pos = get_global_id(0);
     int loc_pos = get_local_id(0);
-    int grp_pos = get_group_id(0);
+//    int grp_pos = get_group_id(0);
     
 //    int glb_dim = get_global_size(0);
 //    int loc_dim = get_local_size(0);
@@ -66,7 +66,7 @@ kernel void vec_sum(const  int      n,      //size uu
 //    }
 
 
-    printf("%2d %2d %2d %2d %8.4f %2d %8.4f\n", n, grp_pos, loc_pos, glb_pos, uu_loc[loc_pos], str_pos, uu[str_pos]);
+//    printf("%2d %2d %2d %8.4f %2d %8.4f\n", n, loc_pos, glb_pos, uu_loc[loc_pos], str_pos, uu[str_pos]);
     
     
     return;

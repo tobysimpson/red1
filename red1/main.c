@@ -20,7 +20,7 @@
 
 
 //width (check kernel!)
-const size_t w = 4;
+const int w = 256;
 
 
 //testing reduction - in place
@@ -33,7 +33,7 @@ int main(int argc, const char * argv[])
     ocl_init(&ocl);
     
     //vars
-    size_t n = 32;
+    int n = 12345678;
 
     /*
      ===========
@@ -48,7 +48,7 @@ int main(int argc, const char * argv[])
     ocl.err = clSetKernelArg(ocl.vec_ini, 0, sizeof(cl_mem), (void*)&uu);
     
     //init
-    ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_ini, 1, NULL, &n, NULL, 0, NULL, NULL);
+    ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_ini, 1, NULL, (size_t*)&n, NULL, 0, NULL, NULL);
     
     /*
      ===========
@@ -56,16 +56,19 @@ int main(int argc, const char * argv[])
      ===========
      */
     
-    size_t nele = n;
+    int nele = n;
 
-    for(uint i=0; i<5; i++)
+    for(int i=0; i<10; i++)
     {
-        size_t nsub = ceil((float)nele/(float)w);       //number subtotals
-        size_t npad = w*nsub;                           //padded input
+        int nsub = ceil((float)nele/(float)w);       //number subtotals
+        int s = pow(w,i);                            //stride
         
-        size_t s = pow(w,i);                            //stride
+        //prc dims
+        size_t prc_n = w*nsub;                      //padded
+        size_t prc_w = w;
         
-        printf("loop %d %3zu %3zu %3zu %3zu\n", i, nele, nsub, npad, s);
+        
+        printf("loop %d %8d %8d %8d %8zu %8d\n", i, n, nele, nsub, prc_n, s);
         
         //args
         ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(size_t), (void*)&n);
@@ -73,7 +76,7 @@ int main(int argc, const char * argv[])
         ocl.err = clSetKernelArg(ocl.vec_sum, 2, sizeof(cl_mem), (void*)&uu);
     
         //calc - pad
-        ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_sum, 1, NULL, &npad, &w, 0, NULL, NULL);
+        ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_sum, 1, NULL, &prc_n, &prc_w, 0, NULL, NULL);
         
         //exit
         if(nsub==1) break;
@@ -82,6 +85,18 @@ int main(int argc, const char * argv[])
         nele = nsub;
         
     }
+    
+    
+    //result
+    float r;
+    
+    //read
+    ocl.err = clEnqueueReadBuffer(ocl.command_queue, uu, CL_TRUE, 0, sizeof(float), &r, 0, NULL, NULL);
+
+    //disp
+    printf("ana %d\n", n);
+//    printf("ana %f\n", 0.5*n*(n-1));
+    printf("num %f\n", r);
     
 
     
@@ -104,8 +119,8 @@ int main(int argc, const char * argv[])
 
 
 
-//    size_t res;
-//    cl_int err = clGetKernelWorkGroupInfo(ocl.vec_sum, ocl.device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), (void*)&res, NULL);
+//    int res;
+//    cl_int err = clGetKernelWorkGroupInfo(ocl.vec_sum, ocl.device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(int), (void*)&res, NULL);
 //    printf("res: %zu %d\n",res, err);
 
 
@@ -122,10 +137,10 @@ int main(int argc, const char * argv[])
      ocl_init(&ocl);
      
      //vars
-     size_t n = 123456789; //(float loses precision above 8 digits)
+     int n = 123456789; //(float loses precision above 8 digits)
      
      //width (check kernel!)
-     size_t w = 256;
+     int w = 256;
      
 
       //===========
@@ -148,15 +163,15 @@ int main(int argc, const char * argv[])
       //===========
       
      
-     size_t n1 = n;
+     int n1 = n;
      cl_mem u1 = uu;
      cl_mem u2;
      
 
      for(uint i=0; i<10; i++)
      {
-         size_t n2 = ceil((float)n1/(float)w);     //output size
-         size_t n3 = n2*w;                           //proc size (pad)
+         int n2 = ceil((float)n1/(float)w);     //output size
+         int n3 = n2*w;                           //proc size (pad)
          
          printf("loop %12zu %12zu %12zu\n", n1, n2, n2*w);
          
