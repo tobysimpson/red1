@@ -20,7 +20,7 @@
 
 
 //width (check kernel!)
-const int w = 256;
+const int w = 32;
 
 
 //testing reduction - in place
@@ -33,7 +33,7 @@ int main(int argc, const char * argv[])
     ocl_init(&ocl);
     
     //vars
-    int n = 12345678;
+    int n = 123456789;
 
     /*
      ===========
@@ -68,7 +68,7 @@ int main(int argc, const char * argv[])
         size_t prc_w = w;
         
         
-        printf("loop %d %8d %8d %8d %8zu %8d\n", i, n, nele, nsub, prc_n, s);
+        printf("loop %d %10d %10d %10d %10zu %10d\n", i, n, nele, nsub, prc_n, s);
         
         //args
         ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(size_t), (void*)&n);
@@ -119,9 +119,6 @@ int main(int argc, const char * argv[])
 
 
 
-//    int res;
-//    cl_int err = clGetKernelWorkGroupInfo(ocl.vec_sum, ocl.device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(int), (void*)&res, NULL);
-//    printf("res: %zu %d\n",res, err);
 
 
 /*

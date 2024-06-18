@@ -6,7 +6,7 @@
 //
 
 //width
-constant int w = 256;
+constant int w = 32;
 
 
 //init

@@ -118,6 +118,12 @@ void ocl_init(struct ocl_obj *ocl)
     ocl->vec_sub = clCreateKernel(ocl->program, "vec_sub", &ocl->err);
     ocl->vec_sum = clCreateKernel(ocl->program, "vec_sum", &ocl->err);
     
+    
+    size_t res;
+    cl_int err = clGetKernelWorkGroupInfo(ocl->vec_sum, ocl->device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), (void*)&res, NULL);
+    printf("res: %zu %d\n",res, err);
+
+    
 }
 
 
