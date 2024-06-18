@@ -19,6 +19,9 @@
 #include "ocl.h"
 
 
+//width (check kernel!)
+const size_t w = 4;
+
 
 //testing reduction - in place
 int main(int argc, const char * argv[])
@@ -31,10 +34,7 @@ int main(int argc, const char * argv[])
     
     //vars
     size_t n = 32;
-    
-    //width (check kernel!)
-    size_t w = 4;
-    
+
     /*
      ===========
      init
@@ -68,7 +68,7 @@ int main(int argc, const char * argv[])
         printf("loop %d %3zu %3zu %3zu %3zu\n", i, nele, nsub, npad, s);
         
         //args
-        ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(size_t), (void*)&nele);
+        ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(size_t), (void*)&n);
         ocl.err = clSetKernelArg(ocl.vec_sum, 1, sizeof(size_t), (void*)&s);
         ocl.err = clSetKernelArg(ocl.vec_sum, 2, sizeof(cl_mem), (void*)&uu);
     

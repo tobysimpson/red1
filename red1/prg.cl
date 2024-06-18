@@ -21,7 +21,7 @@ kernel void vec_ini(global float *uu)
 
 
 //sum in place
-kernel void vec_sum(const  int      n,      //actual size
+kernel void vec_sum(const  int      n,      //size uu
                     const  int      s,      //stride
                     global float    *uu)
 {
@@ -34,13 +34,15 @@ kernel void vec_sum(const  int      n,      //actual size
 //    int grp_dim = get_num_groups(0);
 
 //    printf("%d/%d %d/%d %d/%d\n", glb_pos, glb_dim, loc_pos, loc_dim, grp_pos, grp_dim);
-
-
+    
     //buffer
     local float uu_loc[w];
     
+    //strided pos
+    int str_pos = s*glb_pos;
+    
     //read (zero padded values)
-    uu_loc[loc_pos] = (glb_pos<n)*uu[glb_pos];
+    uu_loc[loc_pos] = (str_pos<n)*uu[str_pos];
     
     //sync
     mem_fence(CLK_LOCAL_MEM_FENCE);
@@ -48,21 +50,23 @@ kernel void vec_sum(const  int      n,      //actual size
     float usum = 0e0f;
     
     //reduce
-    for(int i=1; i<w; i++)
+    for(int i=0; i<w; i++)
     {
         usum += uu_loc[i];
     }
     
-    //write all
-//    uu[glb_pos] = (loc_pos==0)?usum:0e0f;
+    //write all (for debug)
+    uu[str_pos] = (loc_pos==0)*usum;
     
-    //write stride
-    if(loc_pos==0)
-    {
-        uu[glb_pos] = usum;
-    }
 
-    printf("%3d %3d %2d %2d %2d %8.4f %8.4f %8.4f\n", n, s, glb_pos, loc_pos, grp_pos, uu_loc[loc_pos], usum, uu[glb_pos]);
+//    //write stride
+//    if(loc_pos==0)
+//    {
+//        uu[glb_pos] = usum
+//    }
+
+
+    printf("%2d %2d %2d %2d %8.4f %2d %8.4f\n", n, grp_pos, loc_pos, glb_pos, uu_loc[loc_pos], str_pos, uu[str_pos]);
     
     
     return;
