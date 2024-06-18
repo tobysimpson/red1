@@ -5,6 +5,9 @@
 //  Created by toby on 12.06.24.
 //
 
+//width
+constant int w = 4;
+
 
 //init
 kernel void vec_ini(global float *uu)
@@ -18,13 +21,10 @@ kernel void vec_ini(global float *uu)
 
 
 //sum in place
-kernel void vec_sum(const  int    n,  //actual size
-                    const  int    s,  //stride
-                    global float            *uu)
+kernel void vec_sum(const  int      n,      //actual size
+                    const  int      s,      //stride
+                    global float    *uu)
 {
-    //width
-//    const int w = 4;
-    
     int glb_pos = get_global_id(0);
     int loc_pos = get_local_id(0);
     int grp_pos = get_group_id(0);
@@ -35,8 +35,34 @@ kernel void vec_sum(const  int    n,  //actual size
 
 //    printf("%d/%d %d/%d %d/%d\n", glb_pos, glb_dim, loc_pos, loc_dim, grp_pos, grp_dim);
 
+
+    //buffer
+    local float uu_loc[w];
     
-    printf("%3d %3d %2d %2d %2d\n", n, s, glb_pos, loc_pos, grp_pos);
+    //read (zero padded values)
+    uu_loc[loc_pos] = (glb_pos<n)*uu[glb_pos];
+    
+    //sync
+    mem_fence(CLK_LOCAL_MEM_FENCE);
+    
+    float usum = 0e0f;
+    
+    //reduce
+    for(int i=1; i<w; i++)
+    {
+        usum += uu_loc[i];
+    }
+    
+    //write all
+//    uu[glb_pos] = (loc_pos==0)?usum:0e0f;
+    
+    //write stride
+    if(loc_pos==0)
+    {
+        uu[glb_pos] = usum;
+    }
+
+    printf("%3d %3d %2d %2d %2d %8.4f %8.4f %8.4f\n", n, s, glb_pos, loc_pos, grp_pos, uu_loc[loc_pos], usum, uu[glb_pos]);
     
     
     return;

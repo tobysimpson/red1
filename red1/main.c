@@ -56,29 +56,30 @@ int main(int argc, const char * argv[])
      ===========
      */
     
-    size_t n1 = n;
+    size_t nele = n;
 
     for(uint i=0; i<5; i++)
     {
-        size_t n2 = ceil((float)n1/(float)w);   //output
-        size_t n3 = w*n2;                       //pad
+        size_t nsub = ceil((float)nele/(float)w);       //number subtotals
+        size_t npad = w*nsub;                           //padded input
         
-        size_t s = pow(w,i);
+        size_t s = pow(w,i);                            //stride
         
-        printf("loop %d %3zu %3zu %3zu %3zu\n", i, n1, n2, n3, s);
+        printf("loop %d %3zu %3zu %3zu %3zu\n", i, nele, nsub, npad, s);
         
         //args
-        ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(int),    (void*)&n1);
-        ocl.err = clSetKernelArg(ocl.vec_sum, 1, sizeof(int),    (void*)&s);
+        ocl.err = clSetKernelArg(ocl.vec_sum, 0, sizeof(size_t), (void*)&nele);
+        ocl.err = clSetKernelArg(ocl.vec_sum, 1, sizeof(size_t), (void*)&s);
         ocl.err = clSetKernelArg(ocl.vec_sum, 2, sizeof(cl_mem), (void*)&uu);
     
         //calc - pad
-        ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_sum, 1, NULL, &n3, &w, 0, NULL, NULL);
+        ocl.err = clEnqueueNDRangeKernel(ocl.command_queue, ocl.vec_sum, 1, NULL, &npad, &w, 0, NULL, NULL);
+        
+        //exit
+        if(nsub==1) break;
         
         //iter
-        n1 = n2;
-        
-        if(n2==1) break;
+        nele = nsub;
         
     }
     
