@@ -29,12 +29,6 @@ kernel void vec_sum(const  int      n,      //size uu
     int loc_pos = get_local_id(0);
 //    int grp_pos = get_group_id(0);
     
-//    int glb_dim = get_global_size(0);
-//    int loc_dim = get_local_size(0);
-//    int grp_dim = get_num_groups(0);
-
-//    printf("%d/%d %d/%d %d/%d\n", glb_pos, glb_dim, loc_pos, loc_dim, grp_pos, grp_dim);
-    
     //buffer
     local float uu_loc[w];
     
@@ -58,13 +52,11 @@ kernel void vec_sum(const  int      n,      //size uu
     //write all (for debug)
     uu[str_pos] = (loc_pos==0)*usum;
     
-
 //    //write stride
 //    if(loc_pos==0)
 //    {
-//        uu[glb_pos] = usum
+//        uu[str_pos] = usum;
 //    }
-
 
 //    printf("%2d %2d %2d %8.4f %2d %8.4f\n", n, loc_pos, glb_pos, uu_loc[loc_pos], str_pos, uu[str_pos]);
     

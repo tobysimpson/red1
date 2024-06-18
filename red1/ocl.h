@@ -20,9 +20,9 @@ struct ocl_obj
     cl_context          context;
     cl_command_queue    command_queue;
     cl_program          program;
-    char                device_str[50];
     cl_event            event;
-        
+    char                device_str[50];
+    
     //kernels
     cl_kernel           vec_ini;
     cl_kernel           vec_sub;
@@ -118,12 +118,10 @@ void ocl_init(struct ocl_obj *ocl)
     ocl->vec_sub = clCreateKernel(ocl->program, "vec_sub", &ocl->err);
     ocl->vec_sum = clCreateKernel(ocl->program, "vec_sum", &ocl->err);
     
-    
-    size_t res;
-    cl_int err = clGetKernelWorkGroupInfo(ocl->vec_sum, ocl->device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), (void*)&res, NULL);
-    printf("res: %zu %d\n",res, err);
+//    size_t res;
+//    cl_int err = clGetKernelWorkGroupInfo(ocl->vec_sum, ocl->device_id, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), (void*)&res, NULL);
+//    printf("res: %zu %d\n",res, err);
 
-    
 }
 
 
